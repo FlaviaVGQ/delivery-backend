@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 @api_view(['GET'])
 def exemplo_view(request):
     data = {
-        'mensagem': 'Olá do Django!!',
+        'mensagem': 'Delivery!!',
         'status': 'success'
     }
     return Response(data)
