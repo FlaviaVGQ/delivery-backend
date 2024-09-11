@@ -42,10 +42,11 @@ INSTALLED_APPS = [
     'login',
     'rest_framework',
     'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # URL padrão do frontend React em desenvolvimento
+    "http://localhost:3000",
 ]
 
 
@@ -123,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Paraiba'
+TIME_ZONE = 'America/Recife'
 
 USE_I18N = True
 
@@ -139,3 +140,5 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+SECRET_KEY = 'p*4jg@m@w51ngh@)72&6orzrvb0e1g^)u!_qztgb9zbi0ygm7o'
