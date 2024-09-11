@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
 
     'login',
+    'createuser',
     'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
