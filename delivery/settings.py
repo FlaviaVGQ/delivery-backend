@@ -41,29 +41,32 @@ INSTALLED_APPS = [
 
     'login',
     'createuser',
+    'forgotpassword',
     'rest_framework',
+    'resetpassword',
     'corsheaders',
     'rest_framework.authtoken',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-
-
-    'corsheaders.middleware.CorsMiddleware',
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'delivery.urls'
@@ -86,6 +89,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'delivery.wsgi.application'
 
+#Email de recuperação
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP do Gmail
+EMAIL_PORT = 587  # Porta para envio seguro (TLS)
+EMAIL_USE_TLS = True  # Uso de TLS para conexão segura
+EMAIL_HOST_USER = 'contato.projetodeliveryexpress@gmail.com'
+EMAIL_HOST_PASSWORD = 'euxe uwuw aznr dnko'
+
+DEFAULT_FROM_EMAIL = 'contato.projetodeliveryexpress@gmail.com'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -143,3 +155,6 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SECRET_KEY = 'p*4jg@m@w51ngh@)72&6orzrvb0e1g^)u!_qztgb9zbi0ygm7o'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
