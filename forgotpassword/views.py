@@ -21,24 +21,19 @@ class ForgotPasswordView(APIView):
             return Response({"error": "O e-mail ou nome de usuário é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Verifica se é um e-mail ou nome de usuário
             if '@' in email_or_username:
                 user = User.objects.get(email=email_or_username)
             else:
                 user = User.objects.get(username=email_or_username)
         except User.DoesNotExist:
-            # Retorna uma mensagem de erro se o e-mail ou nome de usuário não forem encontrados
             return Response({"error": "E-mail ou nome de usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Gera o token e o UID para redefinição de senha
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"  # Ajuste conforme necessário
+        reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
 
-        # Envia o e-mail de redefinição de senha
         self.send_reset_email(user.email, reset_link)
 
-        # Retorna mensagem de sucesso
         return Response({"message": "E-mail de recuperação enviado com sucesso. Verifique sua caixa de entrada."}, status=status.HTTP_200_OK)
 
     def send_reset_email(self, email, reset_link):

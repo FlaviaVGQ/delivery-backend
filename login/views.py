@@ -23,8 +23,8 @@ from django.contrib.auth import get_user_model
 
 class LoginView(APIView):
     permission_classes = (AllowAny,)
-    MAX_ATTEMPTS = 5  # Número máximo de tentativas permitidas
-    BLOCK_TIME = 1 * 60  # Tempo de bloqueio em segundos (10 minutos)
+    MAX_ATTEMPTS = 5
+    BLOCK_TIME = 1 * 60
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -33,7 +33,7 @@ class LoginView(APIView):
         if not username or not password:
             return Response({"error": "Usuário e senha são obrigatórios."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Verifica se o usuário está bloqueado
+
         lockout_time = cache.get(f'lockout_{username}')
         if lockout_time:
             remaining_time = (lockout_time - timezone.now()).total_seconds()
@@ -67,7 +67,7 @@ class LoginView(APIView):
                 remaining_time = (lockout_until - timezone.now()).total_seconds()
                 cache.set(f'lockout_{username}', lockout_until, timeout=self.BLOCK_TIME)
 
-                # Envia o e-mail de desbloqueio
+
                 self.send_unlock_email(username)
 
                 return Response({
