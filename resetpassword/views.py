@@ -1,29 +1,41 @@
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import get_user_model
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
+import json
 from django.http import JsonResponse
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 
-class ResetPasswordView(View):
-    @csrf_exempt
-    def post(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
 
-            if default_token_generator.check_token(user, token):
-                password = request.POST.get('password')
-                if password:
-                    user.set_password(password)
-                    user.save()
-                    return JsonResponse({'status': 'success', 'message': 'Senha redefinida com sucesso.'})
-                else:
-                    return JsonResponse({'status': 'error', 'message': 'Senha não fornecida.'})
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Token inválido ou expirado.'})
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return JsonResponse({'status': 'error', 'message': 'Token inválido ou expirado.'})
+class ResetPasswordView(View):
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Verifique o corpo da requisição
+            body = json.loads(request.body)
+            print("Corpo da requisição:", body)
+
+            # Obter o nome de usuário e a nova senha do corpo da requisição
+            username = body.get('username')
+            password = body.get('password')
+            print(f"Username: {username}, Password: {password}")
+
+            if not username or not password:
+                return JsonResponse({'status': 'error', 'message': 'Nome de usuário ou senha não fornecidos.'})
+
+            # Buscar o usuário pelo nome de usuário
+            user = User.objects.get(username=username)
+
+            # Alterar a senha
+            user.set_password(password)
+            user.save()
+
+            return JsonResponse({'status': 'success', 'message': 'Senha redefinida com sucesso.'})
+
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Usuário não encontrado.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Erro ao decodificar JSON.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
