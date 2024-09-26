@@ -5,19 +5,29 @@ from .models import Category
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
 
-
 class CategoryView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
         category_name = request.data.get('category')
-        print(category_name)
         user_id = request.data.get('user_id')
 
-        if not category_name or not user_id:
-            return Response({"error": "Categoria e ID de usuário são obrigatórios."},
-                            status=status.HTTP_400_BAD_REQUEST)
+        print(f"Categoria: {category_name}, User ID: {user_id}")  # Debugging
 
+        # Validação dos campos obrigatórios
+        if not category_name:
+            return Response({"error": "Categoria é obrigatória."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user_id is None:
+            return Response({"error": "ID de usuário é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validação se user_id é um número
+        try:
+            user_id = int(user_id)  # Converte user_id para inteiro
+        except ValueError:
+            return Response({"error": "ID de usuário deve ser um número."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Busca o usuário pelo ID
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
@@ -35,6 +45,13 @@ class CategoryView(APIView):
         if not user_id:
             return Response({"error": "ID de usuário é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Validação se user_id é um número
+        try:
+            user_id = int(user_id)  # Converte user_id para inteiro
+        except ValueError:
+            return Response({"error": "ID de usuário deve ser um número."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Busca o usuário pelo ID
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
@@ -42,11 +59,8 @@ class CategoryView(APIView):
 
         # Busca todas as categorias associadas ao usuário
         categories = Category.objects.filter(user=user)
-        print (categories)
 
         # Converte as categorias para um formato que pode ser enviado como JSON
         categories_data = [{"id": category.id, "name": category.name} for category in categories]
-        print(categories_data)
 
         return Response(categories_data, status=status.HTTP_200_OK)
-
