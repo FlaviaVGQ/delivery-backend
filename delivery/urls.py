@@ -7,4 +7,6 @@ urlpatterns = [
     path('', include('createuser.urls')),
     path('', include('forgotpassword.urls')),
     path('', include('resetpassword.urls')),
+    path('', include('resetpassword.urls')),
+    path('', include('category.urls')),
 ]

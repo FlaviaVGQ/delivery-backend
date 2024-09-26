@@ -55,6 +55,7 @@ class LoginView(APIView):
             return Response({
                 'success': True,
                 'token': token.key,
+                'username': user.username,
                 'message': 'Login realizado com sucesso.'
             })
         else:
