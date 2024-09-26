@@ -52,10 +52,13 @@ class LoginView(APIView):
         if user is not None:
             cache.delete(f'login_attempts_{username}')
             token, created = Token.objects.get_or_create(user=user)
+            print(user.id)
+            print(user.username)
             return Response({
                 'success': True,
                 'token': token.key,
                 'username': user.username,
+                'userId': user.id,
                 'message': 'Login realizado com sucesso.'
             })
         else:
