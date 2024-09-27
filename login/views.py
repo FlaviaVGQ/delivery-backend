@@ -33,7 +33,6 @@ class LoginView(APIView):
         if not username or not password:
             return Response({"error": "Usuário e senha são obrigatórios."}, status=status.HTTP_400_BAD_REQUEST)
 
-
         lockout_time = cache.get(f'lockout_{username}')
         if lockout_time:
             remaining_time = (lockout_time - timezone.now()).total_seconds()
