@@ -58,6 +58,17 @@ class ProductView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, product_id):
+        try:
+            product = Product.objects.get(id=product_id)
+            print(product)
+            product.delete()
+            return Response({"message": "Produto excluído com sucesso."}, status=status.HTTP_204_NO_CONTENT)
+        except Product.DoesNotExist:
+            return Response({"error": "Produto não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request):
         user = request.query_params.get('user_id')
         products = Product.objects.filter(user=user)
