@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'forgotpassword',
     'rest_framework',
     'resetpassword',
+    'save_company_info',
     'corsheaders',
     'rest_framework.authtoken',
 ]

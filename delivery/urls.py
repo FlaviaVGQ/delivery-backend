@@ -10,4 +10,5 @@ urlpatterns = [
     path('', include('resetpassword.urls')),
     path('', include('category.urls')),
     path('', include('product.urls')),
+    path('', include('save_company_info.urls')),
 ]
