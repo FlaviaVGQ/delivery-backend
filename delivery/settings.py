@@ -157,3 +157,10 @@ SECRET_KEY = 'p*4jg@m@w51ngh@)72&6orzrvb0e1g^)u!_qztgb9zbi0ygm7o'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+

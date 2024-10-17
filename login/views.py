@@ -1,30 +1,22 @@
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.template.loader import render_to_string
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
-from rest_framework.permissions import AllowAny
 from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
 from django.core.cache import cache
 from datetime import timedelta
 from django.utils import timezone
+from django.utils.html import strip_tags
 from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.utils.html import strip_tags
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth import get_user_model
-
+from forgotpassword.models import PasswordResetToken
 
 class LoginView(APIView):
     permission_classes = (AllowAny,)
     MAX_ATTEMPTS = 5
-    BLOCK_TIME = 1 * 60
+    BLOCK_TIME = 1 * 60  # 1 minuto em segundos
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -36,7 +28,6 @@ class LoginView(APIView):
         lockout_time = cache.get(f'lockout_{username}')
         if lockout_time:
             remaining_time = (lockout_time - timezone.now()).total_seconds()
-
             if remaining_time > 0:
                 return Response({
                     "success": False,
@@ -46,13 +37,12 @@ class LoginView(APIView):
             else:
                 cache.delete(f'lockout_{username}')
 
+        # Autentica o usuário
         user = authenticate(username=username, password=password)
 
         if user is not None:
             cache.delete(f'login_attempts_{username}')
             token, created = Token.objects.get_or_create(user=user)
-            print(user.id)
-            print(user.username)
             return Response({
                 'success': True,
                 'token': token.key,
@@ -70,7 +60,6 @@ class LoginView(APIView):
                 remaining_time = (lockout_until - timezone.now()).total_seconds()
                 cache.set(f'lockout_{username}', lockout_until, timeout=self.BLOCK_TIME)
 
-
                 self.send_unlock_email(username)
 
                 return Response({
@@ -87,10 +76,10 @@ class LoginView(APIView):
     def send_unlock_email(self, username):
         """Envia um e-mail para o usuário com instruções para desbloquear a conta."""
         try:
-            user = User.objects.get(username=username)
-            token = default_token_generator.make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
+            user = User.objects.get(username=username)  # Obtém o usuário baseado no nome de usuário
+            # Cria o token de redefinição
+            password_reset_token = PasswordResetToken.objects.create(user=user)
+            reset_link = f"http://localhost:3000/reset-password/{password_reset_token.token}/"
 
             subject = "Conta bloqueada - Instruções de desbloqueio"
             html_message = f"""
@@ -112,4 +101,3 @@ class LoginView(APIView):
             send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
         except User.DoesNotExist:
             print(f"Usuário {username} não encontrado. Não foi possível enviar o e-mail.")
-

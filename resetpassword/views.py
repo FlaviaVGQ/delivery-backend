@@ -1,36 +1,34 @@
-import json
-from django.http import JsonResponse
-from django.views import View
-from django.contrib.auth import get_user_model
-from rest_framework.permissions import AllowAny
+# resetpassword/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from forgotpassword.models import PasswordResetToken
+from django.contrib.auth.models import User
+from django.core.cache import cache
 
-User = get_user_model()
-
-class ResetPasswordView(View):
-    permission_classes = (AllowAny,)
-
-    def post(self, request, *args, **kwargs):
+class ResetPasswordView(APIView):
+    def post(self, request, token):
         try:
-            body = json.loads(request.body)
-            print("Corpo da requisição:", body)
+            # Encontrar o token na tabela forgotpassword_passwordresettoken
+            reset_token = PasswordResetToken.objects.get(token=token)
 
-            username = body.get('username')
-            password = body.get('password')
-            print(f"Username: {username}, Password: {password}")
+            # Verificar se o token ainda é válido
+            if not reset_token.is_valid():
+                return Response({"error": "Token expirado."}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not username or not password:
-                return JsonResponse({'status': 'error', 'message': 'Nome de usuário ou senha não fornecidos.'})
+            # Atualizar a senha
+            new_password = request.data.get("password")
+            if not new_password:
+                return Response({"error": "A senha é obrigatória."}, status=status.HTTP_400_BAD_REQUEST)
 
-            user = User.objects.get(username=username)
-
-            user.set_password(password)
+            user = reset_token.user
+            user.set_password(new_password)
             user.save()
 
-            return JsonResponse({'status': 'success', 'message': 'Senha redefinida com sucesso.'})
+            cache.delete(f'login_attempts_{user.username}')
+            cache.delete(f'lockout_{user.username}')
 
-        except User.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Usuário não encontrado.'})
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Erro ao decodificar JSON.'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            return Response({"success": "Senha alterada com sucesso."}, status=status.HTTP_200_OK)
+
+        except PasswordResetToken.DoesNotExist:
+            return Response({"error": "Token inválido."}, status=status.HTTP_400_BAD_REQUEST)
