@@ -151,7 +151,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SECRET_KEY = 'p*4jg@m@w51ngh@)72&6orzrvb0e1g^)u!_qztgb9zbi0ygm7o'

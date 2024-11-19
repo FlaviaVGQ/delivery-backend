@@ -99,7 +99,10 @@ class ProductView(APIView):
             with open(image_path, 'wb+') as destination:
                 for chunk in image.chunks():
                     destination.write(chunk)
-            image_url = f'{settings.MEDIA_URL}ImagensdosProdutos/{image.name}'
+            image_url = f'ImagensdosProdutos/{image.name}'
+            # image_url = f'{settings.MEDIA_URL}ImagensdosProdutos/{image.name}'
+            print("aqui")
+            print(image_url)
         else:
             image_url = product.image
 
@@ -108,6 +111,9 @@ class ProductView(APIView):
         product.price = price
         product.category = category
         product.image = image_url
+
+        print(product.image)  # Para ver o valor de `product.image` no backend
+        print(product.image.url if hasattr(product.image, 'url') else 'URL não encontrada')
 
         try:
             product.save()
@@ -120,7 +126,6 @@ class ProductView(APIView):
         products = Product.objects.filter(user=user)
         print(products)
 
-
         product_list = [
             {
                 "id": product.id,
@@ -128,11 +133,10 @@ class ProductView(APIView):
                 "description": product.description,
                 "price": str(product.price),
                 "category": product.category.name,
-                "image": product.image.url if product.image else None
-
+                "image": f"{settings.MEDIA_URL}{product.image}" if not str(product.image).startswith(
+                    settings.MEDIA_URL) else str(product.image),
             }
             for product in products
-
         ]
 
         return Response(product_list, status=status.HTTP_200_OK)
