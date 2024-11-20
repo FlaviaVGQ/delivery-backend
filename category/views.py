@@ -5,6 +5,7 @@ from .models import Category
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
 
+
 class CategoryView(APIView):
     permission_classes = (AllowAny,)
 
@@ -28,7 +29,6 @@ class CategoryView(APIView):
         except User.DoesNotExist:
             return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-
         category = Category(name=category_name, user=user)
         category.save()
 
@@ -50,10 +50,28 @@ class CategoryView(APIView):
         except User.DoesNotExist:
             return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-
         categories = Category.objects.filter(user=user)
-
 
         categories_data = [{"id": category.id, "name": category.name} for category in categories]
 
         return Response(categories_data, status=status.HTTP_200_OK)
+
+    def delete(self, request, category_id, *args, **kwargs):
+        user_id = request.data.get('user_id')
+
+        if user_id is None:
+            return Response({"error": "ID de usuário é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            category = Category.objects.get(id=category_id, user=user)
+        except Category.DoesNotExist:
+            return Response({"error": "Categoria não encontrada ou não pertence ao usuário."}, status=status.HTTP_404_NOT_FOUND)
+
+        category.delete()
+
+        return Response({"message": "Categoria excluída com sucesso."}, status=status.HTTP_200_OK)
