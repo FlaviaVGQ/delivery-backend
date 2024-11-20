@@ -78,6 +78,8 @@ def save_company_info(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
+from django.http import FileResponse
+import base64
 
 @csrf_exempt
 def getCompany(request):
@@ -89,8 +91,13 @@ def getCompany(request):
                 return JsonResponse({'error': 'ID de usuário é obrigatório.'}, status=400)
 
             user = User.objects.get(id=user_id)
-
             company_info = NewCompanyInfo.objects.get(user=user)
+
+            # Codifica a imagem em base64
+            image_base64 = None
+            if company_info.image:
+                with open(company_info.image.path, 'rb') as img_file:
+                    image_base64 = base64.b64encode(img_file.read()).decode('utf-8')
 
             return JsonResponse({
                 'data': {
@@ -101,7 +108,7 @@ def getCompany(request):
                     'contact': company_info.contact,
                     'description': company_info.description,
                     'user_id': company_info.user.id,
-                    'image': company_info.image.url if company_info.image else None  # Retorna a URL da imagem
+                    'image': image_base64  # Retorna a imagem codificada em Base64
                 }
             }, status=200)
 
