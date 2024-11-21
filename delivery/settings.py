@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'category',
     'login',
     'createuser',
+    'orders',
     'forgotpassword',
     'rest_framework',
     'resetpassword',
