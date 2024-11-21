@@ -100,9 +100,6 @@ class ProductView(APIView):
                 for chunk in image.chunks():
                     destination.write(chunk)
             image_url = f'ImagensdosProdutos/{image.name}'
-            # image_url = f'{settings.MEDIA_URL}ImagensdosProdutos/{image.name}'
-            print("aqui")
-            print(image_url)
         else:
             image_url = product.image
 
@@ -112,7 +109,7 @@ class ProductView(APIView):
         product.category = category
         product.image = image_url
 
-        print(product.image)  # Para ver o valor de `product.image` no backend
+        print(product.image)
         print(product.image.url if hasattr(product.image, 'url') else 'URL não encontrada')
 
         try:
@@ -121,22 +118,35 @@ class ProductView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request):
-        user = request.query_params.get('user_id')
-        products = Product.objects.filter(user=user)
-        print(products)
+    def get(self, request, product_id=None):
+        if product_id:
+            try:
+                product = Product.objects.get(id=product_id)
+                product_data = {
+                    "id": product.id,
+                    "name": product.name,
+                    "description": product.description,
+                    "price": str(product.price),
+                    "categoryId": product.category.id,
+                    "image": f"{settings.MEDIA_URL}{product.image}" if product.image else None,
+                }
+                return Response(product_data, status=status.HTTP_200_OK)
+            except Product.DoesNotExist:
+                return Response({"error": "Produto não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.query_params.get('user_id')
+            products = Product.objects.filter(user=user)
+            product_list = [
+                {
+                    "id": product.id,
+                    "name": product.name,
+                    "description": product.description,
+                    "price": str(product.price),
+                    "category": product.category.name,
+                    "image": f"{settings.MEDIA_URL}{product.image}" if not str(product.image).startswith(
+                        settings.MEDIA_URL) else str(product.image),
+                }
+                for product in products
+            ]
+            return Response(product_list, status=status.HTTP_200_OK)
 
-        product_list = [
-            {
-                "id": product.id,
-                "name": product.name,
-                "description": product.description,
-                "price": str(product.price),
-                "category": product.category.name,
-                "image": f"{settings.MEDIA_URL}{product.image}" if not str(product.image).startswith(
-                    settings.MEDIA_URL) else str(product.image),
-            }
-            for product in products
-        ]
-
-        return Response(product_list, status=status.HTTP_200_OK)
