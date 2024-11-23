@@ -13,21 +13,18 @@ from django.conf import settings
 def save_company_info(request):
     if request.method == 'POST':
         try:
-            # Captura o arquivo de imagem
-            image_file = request.FILES.get('image')
+            image_file = request.FILES.get('image', None)
+            print(image_file)
 
-            # Se houver uma imagem, ela será processada
-            if not image_file:
-                return JsonResponse({'error': 'Imagem é obrigatória.'}, status=400)
 
-            # O resto da lógica permanece a mesma...
-            data = request.POST  # Aqui, mudamos de json.loads(request.body) para request.POST para capturar dados de FormData
+            data = request.POST
             name = data.get('name')
             opening_hours = data.get('opening_hours', '')
             address = data.get('address', '')
             contact = data.get('contact', '')
             description = data.get('description', '')
             user_id = data.get('user_id')
+
 
             if not name:
                 return JsonResponse({'error': 'Nome da empresa é obrigatório.'}, status=400)
@@ -37,33 +34,36 @@ def save_company_info(request):
 
             user = User.objects.get(id=int(user_id))
 
-            # Define o diretório onde a imagem será salva
-            user_logo_directory = os.path.join('logoRestaurante', str(user.id))
-            logo_directory_path = os.path.join(settings.MEDIA_ROOT, user_logo_directory)
-            os.makedirs(logo_directory_path, exist_ok=True)
 
-            # Armazena a imagem
-            fs = FileSystemStorage(location=logo_directory_path)
-            filename = fs.save(image_file.name, image_file)  # Salva o arquivo
-            image_path = os.path.join(user_logo_directory, filename)
+            company_info, created = NewCompanyInfo.objects.get_or_create(user=user)
 
-            # Atualiza ou cria as informações da empresa
-            company_info, created = NewCompanyInfo.objects.update_or_create(
-                user=user,
-                defaults={
-                    'name': name,
-                    'opening_hours': opening_hours,
-                    'address': address,
-                    'contact': contact,
-                    'description': description,
-                    'image': image_path  # Salva o caminho da imagem
-                }
-            )
 
-            message = 'Informações da empresa salvas com sucesso!' if created else 'Informações da empresa atualizadas com sucesso!'
+            company_info.name = name
+            company_info.opening_hours = opening_hours
+            company_info.address = address
+            company_info.contact = contact
+            company_info.description = description
+
+
+            if image_file and image_file.name != "None":
+
+                user_logo_directory = os.path.join('logoRestaurante', str(user.id))
+                logo_directory_path = os.path.join(settings.MEDIA_ROOT, user_logo_directory)
+                os.makedirs(logo_directory_path, exist_ok=True)
+
+
+                fs = FileSystemStorage(location=logo_directory_path)
+                filename = fs.save(image_file.name, image_file)
+                image_path = os.path.join(user_logo_directory, filename)
+
+
+                company_info.image = image_path
+
+
+            company_info.save()
 
             return JsonResponse({
-                'message': message,
+                'message': 'Informações da empresa salvas com sucesso!',
                 'data': {
                     'id': company_info.id,
                     'name': company_info.name,
@@ -72,11 +72,12 @@ def save_company_info(request):
                     'contact': company_info.contact,
                     'description': company_info.description,
                     'user_id': company_info.user.id,
-                    'image': company_info.image.url if company_info.image else None  # Retorna o URL da imagem
+                    'image': company_info.image.url if company_info.image else None
                 }
             })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
 
 from django.http import FileResponse
 import base64
@@ -93,7 +94,7 @@ def getCompany(request):
             user = User.objects.get(id=user_id)
             company_info = NewCompanyInfo.objects.get(user=user)
 
-            # Codifica a imagem em base64
+
             image_base64 = None
             if company_info.image:
                 with open(company_info.image.path, 'rb') as img_file:
@@ -108,7 +109,7 @@ def getCompany(request):
                     'contact': company_info.contact,
                     'description': company_info.description,
                     'user_id': company_info.user.id,
-                    'image': image_base64  # Retorna a imagem codificada em Base64
+                    'image': image_base64
                 }
             }, status=200)
 
