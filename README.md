@@ -1,5 +1,7 @@
 <h1 align="center"> Sistema Delivery Express </h1>
 
+<img src="imagens/logo_delivery.png" alt="Sistema Delivery Express" style="display: block; margin-left: auto; margin-right: auto;  width: 30%;" />
+
 O Sistema Delivery Express é uma plataforma web de delivery projetada para gerenciar e otimizar o processo de pedidos e entregas de restaurantes. A plataforma abrange todas as etapas, desde a criação do cardápio e o acompanhamento dos pedidos pelo restaurante (comerciante) até a experiência de visualização e realização de pedidos pelo cliente.
 
 Este projeto foi desenvolvido no contexto da disciplina de Gerência de Projetos da UEBP, com o objetivo de aplicar conceitos de gestão de atividades e demandas em todas as fases de um projeto, desde sua concepção até a entrega final. O Sistema Delivery Express envolve as seguintes etapas de desenvolvimento:
