@@ -1,6 +1,8 @@
 <h1 align="center"> Sistema Delivery Express </h1>
 
-<img src="imagens/logo_delivery.png" alt="Sistema Delivery Express" style="display: block; margin-left: auto; margin-right: auto;  width: 30%;" />
+<p align="center">
+    <img src="imagens/logo_delivery.png" alt="Sistema Delivery Express" width="20%" />
+</p>
 
 O Sistema Delivery Express é uma plataforma web de delivery projetada para gerenciar e otimizar o processo de pedidos e entregas de restaurantes. A plataforma abrange todas as etapas, desde a criação do cardápio e o acompanhamento dos pedidos pelo restaurante (comerciante) até a experiência de visualização e realização de pedidos pelo cliente.
 
@@ -156,10 +158,10 @@ python manage.py runserver
 
 Agora você deve ter o Sistema Delivery Express rodando localmente na sua máquina. Se precisar de mais informações ou ajuda com a configuração, entre em contato com algum integrante do projeto.
 
-
-
-
-
+### Integrantes:
+* [Flávia Vitória](https://github.com/FlaviaVGQ)
+* [Helânio Renê](https://github.com/helaniobf)
+* [Maria Luiza](https://github.com/LuizaLLeite)
 
 
 
