@@ -38,7 +38,7 @@ Este guia tem como objetivo fornecer instruções passo a passo para configurar 
 
 <h2 align="center"> Pré-requisitos de instalação necessários </h2>
 
-## Instalando o Python
+### Instalando o Python
 
 1. Acesse o site oficial do Python: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 2. Baixe a versão mais recente do Python 3.x (recomendado 3.8 ou superior) e siga o assistente de instalação.
@@ -49,7 +49,7 @@ Este guia tem como objetivo fornecer instruções passo a passo para configurar 
 python --version
  ```  
 
-## Instalando o PostgreSQL
+### Instalando o PostgreSQL
 
 1. Acesse o site oficial do PostgreSQL: https://www.postgresql.org/download/.
 2. Baixe o instalador adequado para o seu sistema operacional (Windows, macOS ou Linux). 
@@ -57,13 +57,14 @@ python --version
 4. Após a instalação, abra o pgAdmin (interface gráfica do PostgreSQL) ou o terminal para interagir com o banco de dados.
 
 
-## IDE de Desenvolvimento
+### IDE de Desenvolvimento
 Para começar a executar o projeto, é importante ter uma IDE de sua escolha. Abaixo estão algumas opções que podem ser utilizadas para trabalhar com Python e PostgreSQL:
 
  * PyCharm: https://www.jetbrains.com/pycharm/
  * Visual Studio Code: https://code.visualstudio.com/
 
 <h2 align="center"> Passos para Configuração do Projeto em sua Máquina Local </h2>
+Você pode configurar o projeto de 2 formas pelo arquivo .ZIP ou pelo link do GitHub.
 
 ### Descompactando o Projeto pelo arquivo .ZIP 
 
@@ -75,14 +76,14 @@ Para começar a executar o projeto, é importante ter uma IDE de sua escolha. Ab
 ### Abrindo o Projeto na IDE
 Você pode abrir o projeto em sua IDE de preferência de 2 formas :
 
-1.  * Abra a sua IDE de escolha (por exemplo, Visual Studio Code, PyCharm, Sublime Text, etc.).
+1.  * Abra a sua IDE de escolha (por exemplo, Visual Studio Code, PyCharm, etc.).
     * No menu da IDE, selecione a opção Abrir pasta ou Open Folder.
     * Navegue até a pasta do projeto descompactado e clique em Abrir.
 
 2.  * Clique com o botão direito na pasta que foi descompactada
     * E clique em "Abrir com" e selecione a sua IDE de preferência
 
-## Configurando o Projeto pelo link do GitHub
+### Configurando o Projeto pelo link do GitHub 
 
 1. Abra o terminal ou prompt de comando da sua IDE.
 2. Execute o seguinte comando para clonar o repositório:
