@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-from .models import PasswordResetToken  # Referenciando o modelo
+from .models import PasswordResetToken
 from rest_framework.permissions import AllowAny
 
 class ForgotPasswordView(APIView):
@@ -21,7 +21,6 @@ class ForgotPasswordView(APIView):
         except User.DoesNotExist:
             return Response({"error": "E-mail ou nome de usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Criar um token único e armazená-lo no banco
         password_reset_token = PasswordResetToken.objects.create(user=user)
         reset_link = f"http://localhost:3000/reset-password/{password_reset_token.token}/"
 
@@ -41,7 +40,7 @@ class ForgotPasswordView(APIView):
         Se você não solicitou essa mudança, ignore este e-mail.
 
         Atenciosamente,
-        Sua Equipe
+        Delivery Express
         """
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [email]
