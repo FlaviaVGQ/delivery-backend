@@ -43,48 +43,55 @@ Este guia tem como objetivo fornecer instruções passo a passo para configurar 
 <h2 align="center"> Pré-requisitos de instalação necessários </h2>
 
 ### Instalando o Python
+#### Linux
 
 1. Abra o terminal e execute os seguintes comandos para instalar o Python 3.x (recomendado 3.8 ou superior):
 
+```bash
 sudo apt update
 sudo apt install python3 python3-pip python3-venv
-
+ ```
 2. Verifique a instalação executando:
 
+```bash
 python3 --version
+ ```
+#### Windows
+
+1. Acesse o site oficial do Python: [https://www.python.org/downloads/](https://www.python.org/downloads/)
+2. Baixe a versão mais recente do Python 3.x (recomendado 3.8 ou superior) e siga o assistente de instalação.
+3. **Importante**: Durante a instalação, marque a opção "Add Python to PATH" para garantir que o Python seja acessível de qualquer lugar no terminal.
+4. Se quiser verificar a instalação, abra o terminal ou prompt de comando e execute o seguinte comando:
+1. Abra o terminal e execute os seguintes comandos para instalar o Python 3.x (recomendado 3.8 ou superior):
+
+```bash
+python --version
+ ```  
+
 
 ### Instalando o PostgreSQL
 
-1. Instale o PostgreSQL com os comandos abaixo:
+#### Linux
 
+1. Instale o PostgreSQL com os comandos abaixo:
+```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
-
+ ```  
 2. Após a instalação, inicie o serviço:
-
+```bash
 sudo systemctl start postgresql
-
+ ```  
 3. Verifique se o serviço está ativo:
-
+ ```bash
 sudo systemctl status postgresql
+ ```
 
-4. Acesse o PostgreSQL como superusuário:
-
-sudo -i -u postgres
-
-5. Crie um usuário para o banco de dados: (Exemplo: Escolha um nome de usuário e se deseja que ele seja um superusuário.)
-
-createuser --interactive
-
-6. Configure uma senha para o usuário:
-
-psql
-ALTER USER seu_usuario WITH PASSWORD 'sua_senha';
-\q
-
-7. Crie um banco de dados:
-
-createdb delivery_bd -O seu_usuario
+#### Windows
+1. Acesse o site oficial do PostgreSQL: https://www.postgresql.org/download/.
+2. Baixe o instalador adequado para o seu sistema operacional (Windows, macOS ou Linux). 
+3. Durante a instalação, anote o nome do usuário, a senha  e a  porta padrão do servidor(PORT) do PostgreSQL, pois você precisará desses dados para configurar o banco de dados.
+4. Após a instalação, abra o pgAdmin (interface gráfica do PostgreSQL) ou o terminal para interagir com o banco de dados.
 
 
 ### IDE de Desenvolvimento
@@ -123,19 +130,15 @@ git clone https://github.com/FlaviaVGQ/delivery-backend.git
  ```
 3. Navegue até o diretório do projeto:
 
+```bash
 cd delivery-backend
-
+ ```
 
 <h2 align="center"> Instalando as Dependências do Projeto </h2>
 
 1. Abra o terminal da sua IDE de preferência
 2. Certifique-se de estar no diretório do projeto.
-3. Crie um ambiente virtual:
-
-python3 -m venv venv
-source venv/bin/activate
-
-4. Instale as dependências listadas em requirements.txt:
+3. Instale as dependências listadas em requirements.txt:
 
 ```bash
 pip install -r requirements.txt
@@ -189,6 +192,12 @@ Agora que o banco de dados está configurado e sincronizado, é hora de iniciar 
 ```bash
 python3 manage.py runserver
  ```
+OU, dependendo da versão do pyhton instalado.
+
+```bash
+python manage.py runserver
+ ```
+
 
 <h2 align="center"> Conclusão </h2>
 
