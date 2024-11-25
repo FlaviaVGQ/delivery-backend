@@ -72,7 +72,7 @@ python --version
 
 ```bash
 python --version
- ```  
+ ```
 OU, dependendo da versão do pyhton instalado.
 
 ```bash
@@ -87,19 +87,27 @@ python3 --version
 ```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
- ```  
+ ```
 2. Após a instalação, inicie o serviço:
 ```bash
 sudo systemctl start postgresql
- ```  
+ ```
 3. Verifique se o serviço está ativo:
  ```bash
 sudo systemctl status postgresql
  ```
 
+
+4. Instale as dependências do sistema
+ ```bash
+sudo apt update
+sudo apt install -y libpq-dev gcc
+ ```
+
+
 #### Windows
 1. Acesse o site oficial do PostgreSQL: https://www.postgresql.org/download/.
-2. Baixe o instalador adequado para o seu sistema operacional (Windows, macOS ou Linux). 
+2. Baixe o instalador adequado para o seu sistema operacional (Windows, macOS ou Linux).
 3. Durante a instalação, anote o nome do usuário, a senha  e a  porta padrão do servidor(PORT) do PostgreSQL, pois você precisará desses dados para configurar o banco de dados.
 4. Após a instalação, abra o pgAdmin (interface gráfica do PostgreSQL) ou o terminal para interagir com o banco de dados.
 
@@ -129,7 +137,7 @@ Você pode abrir o projeto em sua IDE de preferência de 2 formas :
 
 2.  * Clique com o botão direito na pasta que foi descompactada
     * E clique em "Abrir com" e selecione a sua IDE de preferência
-      
+
 3. Navegue até o diretório do projeto:
 
    ```bash
