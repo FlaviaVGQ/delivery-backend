@@ -56,6 +56,12 @@ sudo apt install python3 python3-pip python3-venv
 ```bash
 python3 --version
  ```
+OU, dependendo da versão do pyhton instalado.
+
+```bash
+python --version
+ ```
+
 #### Windows
 
 1. Acesse o site oficial do Python: [https://www.python.org/downloads/](https://www.python.org/downloads/)
@@ -67,7 +73,11 @@ python3 --version
 ```bash
 python --version
  ```  
+OU, dependendo da versão do pyhton instalado.
 
+```bash
+python3 --version
+ ```
 
 ### Instalando o PostgreSQL
 
@@ -107,7 +117,7 @@ Você pode configurar o projeto de 2 formas pelo arquivo .ZIP OU pelo link do Gi
 
 1. Realize o download da pasta [Baixar o arquivo ZIP](delivery-backend-master.zip)
 2. Localize o arquivo **delivery-backend-master.zip** do projeto no seu computador.
-3. Clique com o botão direito no arquivo e selecione a opção Extrair ou Extrair aqui, dependendo do seu sistema operacional.
+3. Clique com o botão direito no arquivo e selecione a opção Extrair ou Extrair para, dependendo do seu sistema operacional.
 4. Após a descompactação, você verá uma pasta **delivery-backend-master** contendo todos os arquivos do projeto.
 
 ### Abrindo o Projeto na IDE
@@ -119,6 +129,12 @@ Você pode abrir o projeto em sua IDE de preferência de 2 formas :
 
 2.  * Clique com o botão direito na pasta que foi descompactada
     * E clique em "Abrir com" e selecione a sua IDE de preferência
+      
+3. Navegue até o diretório do projeto:
+
+   ```bash
+    cd delivery-backend-master
+     ```
 
 ### 2) Configurando o Projeto pelo link do GitHub
 
@@ -177,6 +193,12 @@ DATABASES = {
 1. Abra o terminal da sua IDE.
 2. Execute os seguintes comandos para criar as tabelas necessárias em seu banco de dados:
 
+```bash
+python manage.py makemigrations
+python manage.py migrate
+ ```
+
+OU, dependendo da versão do pyhton instalado.
 
 ```bash
 python3 manage.py makemigrations
@@ -190,14 +212,13 @@ Agora que o banco de dados está configurado e sincronizado, é hora de iniciar 
 1. Execute o comando abaixo para rodar o servidor local:
 
 ```bash
-python3 manage.py runserver
+python manage.py runserver
  ```
 OU, dependendo da versão do pyhton instalado.
 
 ```bash
-python manage.py runserver
+python3 manage.py runserver
  ```
-
 
 <h2 align="center"> Conclusão </h2>
 
