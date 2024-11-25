@@ -31,7 +31,6 @@ class CategoryView(APIView):
 
         category = Category(name=category_name, user=user)
         category.save()
-
         return Response({"message": "Categoria criada com sucesso!"}, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
@@ -51,9 +50,7 @@ class CategoryView(APIView):
             return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
         categories = Category.objects.filter(user=user)
-
         categories_data = [{"id": category.id, "name": category.name} for category in categories]
-
         return Response(categories_data, status=status.HTTP_200_OK)
 
     def delete(self, request, category_id, *args, **kwargs):

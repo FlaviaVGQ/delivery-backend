@@ -90,11 +90,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'delivery.wsgi.application'
 
-#Email de recuperação
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP do Gmail
-EMAIL_PORT = 587  # Porta para envio seguro (TLS)
-EMAIL_USE_TLS = True  # Uso de TLS para conexão segura
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  #
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'contato.projetodeliveryexpress@gmail.com'
 EMAIL_HOST_PASSWORD = 'euxe uwuw aznr dnko'
 

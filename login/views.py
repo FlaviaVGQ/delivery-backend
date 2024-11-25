@@ -16,7 +16,7 @@ from forgotpassword.models import PasswordResetToken
 class LoginView(APIView):
     permission_classes = (AllowAny,)
     MAX_ATTEMPTS = 5
-    BLOCK_TIME = 1 * 60  # 1 minuto em segundos
+    BLOCK_TIME = 1 * 60
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -26,6 +26,7 @@ class LoginView(APIView):
             return Response({"error": "Usuário e senha são obrigatórios."}, status=status.HTTP_400_BAD_REQUEST)
 
         lockout_time = cache.get(f'lockout_{username}')
+
         if lockout_time:
             remaining_time = (lockout_time - timezone.now()).total_seconds()
             if remaining_time > 0:
@@ -37,7 +38,6 @@ class LoginView(APIView):
             else:
                 cache.delete(f'lockout_{username}')
 
-        # Autentica o usuário
         user = authenticate(username=username, password=password)
 
         if user is not None:
@@ -74,10 +74,8 @@ class LoginView(APIView):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
     def send_unlock_email(self, username):
-        """Envia um e-mail para o usuário com instruções para desbloquear a conta."""
         try:
-            user = User.objects.get(username=username)  # Obtém o usuário baseado no nome de usuário
-            # Cria o token de redefinição
+            user = User.objects.get(username=username)
             password_reset_token = PasswordResetToken.objects.create(user=user)
             reset_link = f"http://localhost:3000/reset-password/{password_reset_token.token}/"
 

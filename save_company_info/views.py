@@ -7,16 +7,16 @@ import json
 import os
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.http import FileResponse
+import base64
 
 
 @csrf_exempt
 def save_company_info(request):
+
     if request.method == 'POST':
         try:
             image_file = request.FILES.get('image', None)
-            print(image_file)
-
-
             data = request.POST
             name = data.get('name')
             opening_hours = data.get('opening_hours', '')
@@ -33,33 +33,21 @@ def save_company_info(request):
                 return JsonResponse({'error': 'ID de usuário é obrigatório.'}, status=400)
 
             user = User.objects.get(id=int(user_id))
-
-
             company_info, created = NewCompanyInfo.objects.get_or_create(user=user)
-
-
             company_info.name = name
             company_info.opening_hours = opening_hours
             company_info.address = address
             company_info.contact = contact
             company_info.description = description
 
-
             if image_file and image_file.name != "None":
-
                 user_logo_directory = os.path.join('logoRestaurante', str(user.id))
                 logo_directory_path = os.path.join(settings.MEDIA_ROOT, user_logo_directory)
                 os.makedirs(logo_directory_path, exist_ok=True)
-
-
                 fs = FileSystemStorage(location=logo_directory_path)
                 filename = fs.save(image_file.name, image_file)
                 image_path = os.path.join(user_logo_directory, filename)
-
-
                 company_info.image = image_path
-
-
             company_info.save()
 
             return JsonResponse({
@@ -75,27 +63,23 @@ def save_company_info(request):
                     'image': company_info.image.url if company_info.image else None
                 }
             })
+
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-
-from django.http import FileResponse
-import base64
-
 @csrf_exempt
 def getCompany(request):
+
     if request.method == 'GET':
         try:
             user_id = request.GET.get('user_id')
-
             if not user_id:
                 return JsonResponse({'error': 'ID de usuário é obrigatório.'}, status=400)
 
             user = User.objects.get(id=user_id)
             company_info = NewCompanyInfo.objects.get(user=user)
-
-
             image_base64 = None
+
             if company_info.image:
                 with open(company_info.image.path, 'rb') as img_file:
                     image_base64 = base64.b64encode(img_file.read()).decode('utf-8')

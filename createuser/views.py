@@ -13,17 +13,14 @@ class CreateUserView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
 
-
         if not username or not email or not password:
             return Response({"error": "Usuário, email e senha são obrigatórios."}, status=status.HTTP_400_BAD_REQUEST)
-
 
         if User.objects.filter(username=username).exists():
             return Response({"error": "Usuário já existe."}, status=status.HTTP_400_BAD_REQUEST)
 
         if User.objects.filter(email=email).exists():
             return Response({"error": "O e-mail já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
-
 
         user = User.objects.create_user(username=username, email=email, password=password)
 

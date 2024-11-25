@@ -11,12 +11,10 @@ class OrderView(APIView):
             user_id = request.data.get('user_id')
             if not user_id:
                 return Response({"error": "O campo 'user_id' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
-
             try:
                 user = User.objects.get(id=user_id)
             except User.DoesNotExist:
                 return Response({"error": "Usuário inválido."}, status=status.HTTP_400_BAD_REQUEST)
-
 
             if isinstance(request.data.get('address'), dict):
                 address = request.data['address']
@@ -44,15 +42,14 @@ class OrderView(APIView):
             return Response({"message": "Pedido criado com sucesso!"}, status=status.HTTP_201_CREATED)
 
         except Exception as e:
-            print(f"Erro ao criar pedido: {str(e)}")
             return Response({"error": f"Erro ao criar pedido: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def get(self, request, order_id=None):
         user_id = request.query_params.get('user_id')
-        print(user_id)
+
         if not user_id:
             return Response({"error": "O campo 'user_id' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
-
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
@@ -83,8 +80,6 @@ class OrderView(APIView):
                 return Response({"error": "Pedido não encontrado."}, status=status.HTTP_404_NOT_FOUND)
         else:
             orders = OrderList.objects.filter(user=user)
-            print(f"Pedidos encontrados para o usuário {user_id}: {orders.count()}")
-
             order_list = [
                 {
                     "id": order.id,
@@ -107,7 +102,6 @@ class OrderView(APIView):
                 for order in orders
             ]
 
-            print("PEDIDOS:", order_list)
             return Response(order_list, status=status.HTTP_200_OK)
 
     def delete(self, request, order_id=None):

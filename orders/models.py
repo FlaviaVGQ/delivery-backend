@@ -11,7 +11,6 @@ class OrderList(models.Model):
     payment_method = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    print(customer_name)
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.customer_name or 'Cliente desconhecido'}"
