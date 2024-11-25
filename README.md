@@ -106,9 +106,9 @@ Você pode configurar o projeto de 2 formas pelo arquivo .ZIP OU pelo link do Gi
 ### 1) Configurando / Descompactando o Projeto pelo arquivo (.ZIP)
 
 1. Realize o download da pasta [Baixar o arquivo ZIP](delivery-backend-master.zip)
-2. Localize o arquivo delivery-backend-master.zip do projeto no seu computador.
+2. Localize o arquivo **delivery-backend-master.zip** do projeto no seu computador.
 3. Clique com o botão direito no arquivo e selecione a opção Extrair ou Extrair aqui, dependendo do seu sistema operacional.
-4. Após a descompactação, você verá uma pasta delivery-backend-master contendo todos os arquivos do projeto.
+4. Após a descompactação, você verá uma pasta **delivery-backend-master** contendo todos os arquivos do projeto.
 
 ### Abrindo o Projeto na IDE
 Você pode abrir o projeto em sua IDE de preferência de 2 formas :
