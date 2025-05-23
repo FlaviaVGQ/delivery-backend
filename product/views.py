@@ -12,6 +12,8 @@ class ProductView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
+        discount = request.data.get('discount', 0)
+        print(discount)
         name = request.data.get('name')
         description = request.data.get('description')
         price = request.data.get('price')
@@ -49,7 +51,8 @@ class ProductView(APIView):
                 price=price,
                 category=category,
                 image=image_url,
-                user=user
+                user=user,
+                discount=discount
             )
             product.save()
             return Response({"message": "Produto adicionado com sucesso."}, status=status.HTTP_201_CREATED)
@@ -78,7 +81,8 @@ class ProductView(APIView):
         price = request.data.get('price', product.price)
         category_id = request.data.get('categoryId', product.category.id)
         image = request.FILES.get('image')
-
+        discount = request.data.get('discount', product.discount)
+        print(discount)
         try:
             category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:
@@ -102,6 +106,8 @@ class ProductView(APIView):
         product.price = price
         product.category = category
         product.image = image_url
+        product.discount = discount
+
 
         try:
             product.save()
@@ -120,7 +126,12 @@ class ProductView(APIView):
                     "price": str(product.price),
                     "categoryId": product.category.id,
                     "image": f"{settings.MEDIA_URL}{product.image}" if product.image else None,
+                    "discount": float(product.discount or 0),
+
+
                 }
+                print(product_data)
+                print(product.discount)
                 return Response(product_data, status=status.HTTP_200_OK)
             except Product.DoesNotExist:
                 return Response({"error": "Produto não encontrado."}, status=status.HTTP_404_NOT_FOUND)
@@ -136,8 +147,8 @@ class ProductView(APIView):
                     "category": product.category.name,
                     "image": f"{settings.MEDIA_URL}{product.image}" if not str(product.image).startswith(
                         settings.MEDIA_URL) else str(product.image),
+                    "discount": float(product.discount or 0),
                 }
                 for product in products
             ]
             return Response(product_list, status=status.HTTP_200_OK)
-
