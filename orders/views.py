@@ -29,7 +29,10 @@ class OrderView(APIView):
                 observation=request.data.get('observation', ''),
                 total_price=request.data['total_price'],
                 payment_method=request.data['payment_method'],
+                status=request.data.get('status', 'Novo')
             )
+
+            print(request.data.get('status', 'Novo'))
 
             for item in request.data.get('items', []):
                 OrderItem.objects.create(
@@ -67,6 +70,7 @@ class OrderView(APIView):
                     "total_price": str(order.total_price),
                     "payment_method": order.payment_method,
                     "created_at": order.created_at,
+                    "status": order.status,
                     "items": [
                         {
                             "product_name": item.product_name,
@@ -90,6 +94,7 @@ class OrderView(APIView):
                     "total_price": str(order.total_price),
                     "payment_method": order.payment_method,
                     "created_at": order.created_at,
+                    "status": order.status,
                     "items": [
                         {
                             "product_name": item.product_name,
@@ -124,3 +129,21 @@ class OrderView(APIView):
 
         except Exception as e:
             return Response({"error": f"Erro ao excluir pedido: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, order_id=None):
+        if not order_id:
+            return Response({"error": "ID do pedido não fornecido."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            order = OrderList.objects.get(id=order_id)
+        except OrderList.DoesNotExist:
+            return Response({"error": "Pedido não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+        status_atualizado = request.data.get("status")
+        print("Status recebido no patch:", status_atualizado)
+        if not status_atualizado:
+            return Response({"error": "O campo 'status' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+
+        order.status = status_atualizado
+        order.save()
+        return Response({"message": "Status atualizado com sucesso."}, status=status.HTTP_200_OK)
