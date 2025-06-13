@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'save_company_info',
     'corsheaders',
     'rest_framework.authtoken',
+    'reports'
 ]
 
 MIDDLEWARE = [
