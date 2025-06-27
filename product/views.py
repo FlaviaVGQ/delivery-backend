@@ -127,8 +127,6 @@ class ProductView(APIView):
                     "categoryId": product.category.id,
                     "image": f"{settings.MEDIA_URL}{product.image}" if product.image else None,
                     "discount": float(product.discount or 0),
-
-
                 }
                 print(product_data)
                 print(product.discount)
